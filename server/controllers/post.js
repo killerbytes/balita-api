@@ -21,7 +21,22 @@ module.exports = {
     
     return Post
       .findAndCountAll(params)
-      .then(posts => res.status(200).send(posts))
+      .then(posts => {
+        posts.rows = posts.rows.map(function(post){
+          return {
+            id: post.id,
+            title: post.title,
+            content: post.content.substr(0,200),
+            postedAt: post.postedAt
+
+          }
+        })
+        // posts.forEach(function(element) {
+        //   console.log(element.id)
+        // }, this);
+
+        return res.status(200).send(posts)
+      })
       .catch(error => res.status(400).send(error));
   },  
   findById(req, res) {
