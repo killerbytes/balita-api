@@ -8,6 +8,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+
 router.post('/api/posts', postsController.create)
 router.get('/api/posts', postsController.list)
 router.get('/api/posts/:id', postsController.findById)

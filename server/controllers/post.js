@@ -5,14 +5,22 @@ module.exports = {
     return Post
       .create({
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        updatedAt: req.body.updatedAt || post.updatedAt,
+        postedAt: req.body.postedAt || post.postedAt
       })
       .then(post => res.status(201).send(post))
       .catch(error => res.status(400).send(error));
   },
   list(req, res) {
+    const {query} = req
+    const params = {
+      limit: query.limit || 10,
+      offset: query.page * (query.limit||10) || 0
+    }
+    
     return Post
-      .all()
+      .findAndCountAll(params)
       .then(posts => res.status(200).send(posts))
       .catch(error => res.status(400).send(error));
   },  
@@ -42,6 +50,7 @@ module.exports = {
           .update({
             title: req.body.title || post.title,
             content: req.body.content || post.content,
+            postedAt: req.body.postedAt || post.postedAt,
           })
           .then(() => res.status(200).send(post))  // Send back the updated post.
           .catch((error) => res.status(400).send(error));
